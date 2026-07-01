@@ -129,7 +129,7 @@ fun BrowserApp() {
                             }
                         ) {
                             IconButton(onClick = { showTabList = true }, modifier = Modifier.size(36.dp)) {
-                                Icon(Icons.Default.Tab, "标签", modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.ViewWeek, "标签", modifier = Modifier.size(20.dp))
                             }
                         }
 
