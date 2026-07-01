@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 object WebViewFactory {
 
     @SuppressLint("SetJavaScriptEnabled")
+    @Suppress("UNUSED_PARAMETER")
     fun createWebView(
         context: Context,
         tabId: String,
@@ -59,7 +60,9 @@ object WebViewFactory {
 
                 // Incognito
                 if (isIncognito) {
+                    @Suppress("DEPRECATION")
                     saveFormData = false
+                    @Suppress("DEPRECATION")
                     savePassword = false
                 }
             }

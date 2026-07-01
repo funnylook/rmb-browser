@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -216,12 +218,12 @@ fun BrowserAppScreen() {
                     IconButton(onClick = {
                         tabManager.getWebView(activeTab?.id ?: "")?.goBack()
                     }, enabled = tabManager.getWebView(activeTab?.id ?: "")?.canGoBack() == true) {
-                        Icon(Icons.Default.ArrowBack, "后退")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "后退")
                     }
                     IconButton(onClick = {
                         tabManager.getWebView(activeTab?.id ?: "")?.goForward()
                     }, enabled = tabManager.getWebView(activeTab?.id ?: "")?.canGoForward() == true) {
-                        Icon(Icons.Default.ArrowForward, "前进")
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, "前进")
                     }
                     IconButton(onClick = {
                         tabManager.createTab()
@@ -264,8 +266,6 @@ fun BrowserAppScreen() {
 
 @Composable
 fun TabWebView(tab: BrowserTab, tabManager: TabManager) {
-    val context = LocalContext.current
-
     AndroidView(
         factory = { ctx ->
             val existingWebView = tabManager.getWebView(tab.id)
