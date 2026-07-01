@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RmbBrowserTheme {
-                BrowserApp()
+                BrowserAppScreen()
             }
         }
     }
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BrowserApp() {
+fun BrowserAppScreen() {
     val context = LocalContext.current
     var tabManager by remember { mutableStateOf(TabManager(context)) }
     var showTabList by remember { mutableStateOf(false) }
@@ -106,7 +106,7 @@ fun BrowserApp() {
                     // Tab indicator
                     if (tabManager.tabCount() > 0) {
                         LinearProgressIndicator(
-                            progress = { (activeTab?.progress ?: 0) / 100f },
+                            progress = (activeTab?.progress ?: 0) / 100f,
                             modifier = Modifier.fillMaxWidth().height(2.dp),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = Color.Transparent,
@@ -172,7 +172,7 @@ fun BrowserApp() {
                             interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }.also {
                                 LaunchedEffect(it) {
                                     it.interactions.collect { interaction ->
-                                        if (interaction is androidx.compose.foundation.interaction.PressInteraction.Focus) {
+                                        if (interaction is androidx.compose.foundation.interaction.PressInteraction) {
                                             isEditingUrl = true
                                         }
                                     }

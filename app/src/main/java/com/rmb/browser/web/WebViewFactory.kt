@@ -24,7 +24,8 @@ object WebViewFactory {
         onFaviconReceived: (Bitmap?) -> Unit,
         onReceivedError: (String) -> Unit
     ): WebView {
-        return WebView(context).apply {
+        val webView = WebView(context)
+        webView.apply {
             layoutParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -66,7 +67,7 @@ object WebViewFactory {
             // Cookie settings
             CookieManager.getInstance().apply {
                 setAcceptCookie(true)
-                setAcceptThirdPartyCookies(this@apply, !isIncognito)
+                setAcceptThirdPartyCookies(webView, !isIncognito)
             }
 
             // WebViewClient
@@ -125,7 +126,8 @@ object WebViewFactory {
             scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
 
             // Developer tools
-            setWebContentsDebuggingEnabled(true)
+            WebView.setWebContentsDebuggingEnabled(true)
         }
+        return webView
     }
 }
