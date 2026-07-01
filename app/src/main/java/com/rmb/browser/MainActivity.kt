@@ -1,10 +1,8 @@
 package com.rmb.browser
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.*
-import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -182,16 +180,16 @@ fun BrowserApp() {
                             }
                         )
 
-                        // Refresh
+                        // Refresh / Stop
                         IconButton(onClick = {
-                            tabManager.getWebView(activeTab?.id ?: "")?.reload()
+                            if (activeTab?.isLoading == true) {
+                                tabManager.getWebView(activeTab.id)?.stopLoading()
+                            } else {
+                                tabManager.getWebView(activeTab?.id ?: "")?.reload()
+                            }
                         }, modifier = Modifier.size(36.dp)) {
                             if (activeTab?.isLoading == true) {
-                                IconButton(onClick = {
-                                    tabManager.getWebView(activeTab.id)?.stopLoading()
-                                }, modifier = Modifier.size(36.dp)) {
-                                    Icon(Icons.Default.Close, "停止", modifier = Modifier.size(20.dp))
-                                }
+                                Icon(Icons.Default.Close, "停止", modifier = Modifier.size(20.dp))
                             } else {
                                 Icon(Icons.Default.Refresh, "刷新", modifier = Modifier.size(20.dp))
                             }
