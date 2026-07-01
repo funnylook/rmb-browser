@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import android.widget.FrameLayout
+import com.rmb.browser.devtools.DevToolsBridge
+import com.rmb.browser.devtools.DevToolsJs
 
 object WebViewFactory {
 
@@ -18,6 +20,7 @@ object WebViewFactory {
         context: Context,
         tabId: String,
         isIncognito: Boolean,
+        devToolsBridge: DevToolsBridge? = null,
         onPageStarted: (String) -> Unit,
         onPageFinished: (String) -> Unit,
         onProgressChanged: (Int) -> Unit,
@@ -33,32 +36,20 @@ object WebViewFactory {
             )
 
             settings.apply {
-                // JavaScript
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 databaseEnabled = true
-
-                // Cache
                 cacheMode = if (isIncognito) WebSettings.LOAD_NO_CACHE else WebSettings.LOAD_DEFAULT
-
-                // Display
                 useWideViewPort = true
                 loadWithOverviewMode = true
                 builtInZoomControls = true
                 displayZoomControls = false
-
-                // Media
                 mediaPlaybackRequiresUserGesture = false
                 allowFileAccess = false
                 allowContentAccess = false
-
-                // Mixed content
                 mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
-
-                // User agent
                 userAgentString = userAgentString + " RmbBrowser/1.0"
 
-                // Incognito
                 if (isIncognito) {
                     @Suppress("DEPRECATION")
                     saveFormData = false
@@ -67,10 +58,14 @@ object WebViewFactory {
                 }
             }
 
-            // Cookie settings
             CookieManager.getInstance().apply {
                 setAcceptCookie(true)
                 setAcceptThirdPartyCookies(webView, !isIncognito)
+            }
+
+            // DevTools JS interface
+            if (devToolsBridge != null) {
+                addJavascriptInterface(devToolsBridge, "DevToolsBridge")
             }
 
             // WebViewClient
@@ -81,6 +76,12 @@ object WebViewFactory {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     url?.let { onPageFinished(it) }
+                    // Inject DevTools JS after page load
+                    if (devToolsBridge != null) {
+                        view?.evaluateJavascript(DevToolsJs.CONSOLE_INTERCEPTOR, null)
+                        view?.evaluateJavascript(DevToolsJs.NETWORK_INTERCEPTOR, null)
+                        view?.evaluateJavascript(DevToolsJs.ELEMENT_INSPECTOR, null)
+                    }
                 }
 
                 override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
@@ -90,16 +91,14 @@ object WebViewFactory {
                 }
 
                 override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                    // Allow proceeding with SSL errors for developer flexibility
                     handler?.proceed()
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                    return false // Let WebView handle all URLs
+                    return false
                 }
             }
 
-            // WebChromeClient
             webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
                     onProgressChanged(newProgress)
@@ -113,22 +112,17 @@ object WebViewFactory {
                     onFaviconReceived(icon)
                 }
 
-                // Support file upload
                 override fun onShowFileChooser(
                     webView: WebView?,
                     filePathCallback: ValueCallback<Array<Uri>>?,
                     fileChooserParams: FileChooserParams?
                 ): Boolean {
-                    // File upload not supported in this version
                     return false
                 }
             }
 
-            // Scroll bar
             isScrollbarFadingEnabled = true
             scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-
-            // Developer tools
             WebView.setWebContentsDebuggingEnabled(true)
         }
         return webView
