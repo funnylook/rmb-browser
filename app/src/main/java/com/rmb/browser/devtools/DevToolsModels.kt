@@ -53,7 +53,6 @@ data class ElementInfo(
     val text: String = "",
     val attributes: Map<String, String> = emptyMap(),
     val styles: Map<String, String> = emptyMap(),
-    val computedStyles: Map<String, String> = emptyMap(),
     val selector: String = "",
     val html: String = "",
     val children: List<ElementInfo> = emptyList()

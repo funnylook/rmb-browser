@@ -65,23 +65,6 @@ fun SettingsScreen(
                 }
             }
 
-            // Developer mode info
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Code, "开发者", tint = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("开发者模式", fontSize = 15.sp, fontWeight = FontWeight.Medium)
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("远程调试已启用", fontSize = 13.sp, color = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("1. 手机连接电脑 USB", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
-                    Text("2. Chrome 打开 chrome://inspect", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
-                    Text("3. 选择设备和页面进行调试", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
-                }
-            }
-
             // Clear incognito data
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,7 +115,7 @@ fun SettingsScreen(
                     Text("RMB浏览器 v1.0.0", fontSize = 13.sp)
                     Text("• 多标签浏览，每个标签独立会话", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text("• 无痕模式，不保存 Cookie 和历史", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
-                    Text("• 开发者模式，支持 USB 远程调试", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+                    Text("• 内置开发者工具，Console/Network/Elements", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                     Text("• 轻量设计，极速启动", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
                 }
             }

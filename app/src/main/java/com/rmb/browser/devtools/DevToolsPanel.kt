@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
-
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -87,7 +86,7 @@ fun DevToolsPanel(
         }
 
         // Divider
-        Divider(color = Color(0xFF424242), thickness = 1.dp)
+        HorizontalDivider(color = Color(0xFF424242), thickness = 1.dp)
 
         // Content
         when (selectedTab) {
@@ -136,7 +135,7 @@ private fun ConsoleTab(bridge: DevToolsBridge, onExecuteJs: (String) -> Unit) {
         }
 
         // JS input
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -338,7 +337,7 @@ private fun NetworkDetailScreen(entry: NetworkEntry, onBack: () -> Unit) {
                 }
             }
         }
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -419,7 +418,7 @@ private fun ElementsTab(bridge: DevToolsBridge, onStartInspect: () -> Unit) {
             }
         }
 
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
 
         val info = elementInfo
         if (info == null) {
