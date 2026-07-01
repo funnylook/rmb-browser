@@ -86,7 +86,7 @@ fun DevToolsPanel(
         }
 
         // Divider
-        HorizontalDivider(color = Color(0xFF424242), thickness = 1.dp)
+        Divider(color = Color(0xFF424242), thickness = 1.dp)
 
         // Content
         when (selectedTab) {
@@ -135,7 +135,7 @@ private fun ConsoleTab(bridge: DevToolsBridge, onExecuteJs: (String) -> Unit) {
         }
 
         // JS input
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -337,7 +337,7 @@ private fun NetworkDetailScreen(entry: NetworkEntry, onBack: () -> Unit) {
                 }
             }
         }
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -418,7 +418,7 @@ private fun ElementsTab(bridge: DevToolsBridge, onStartInspect: () -> Unit) {
             }
         }
 
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
 
         val info = elementInfo
         if (info == null) {
