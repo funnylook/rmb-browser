@@ -15,10 +15,9 @@ import com.rmb.browser.devtools.DevToolsJs
 object WebViewFactory {
 
     @SuppressLint("SetJavaScriptEnabled")
-    @Suppress("UNUSED_PARAMETER")
     fun createWebView(
         context: Context,
-        tabId: String,
+        @Suppress("UNUSED_PARAMETER") tabId: String,
         isIncognito: Boolean,
         devToolsBridge: DevToolsBridge? = null,
         onPageStarted: (String) -> Unit,
@@ -76,12 +75,12 @@ object WebViewFactory {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     url?.let { onPageFinished(it) }
-                    // Inject DevTools JS after page load
-                    if (devToolsBridge != null) {
-                        view?.evaluateJavascript(DevToolsJs.CONSOLE_INTERCEPTOR, null)
-                        view?.evaluateJavascript(DevToolsJs.NETWORK_INTERCEPTOR, null)
-                        view?.evaluateJavascript(DevToolsJs.ELEMENT_INSPECTOR, null)
-                    }
+                    injectDevToolsJs(view, devToolsBridge)
+                }
+
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    // SPA navigation may not trigger onPageFinished
+                    injectDevToolsJs(view, devToolsBridge)
                 }
 
                 override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
@@ -123,8 +122,15 @@ object WebViewFactory {
 
             isScrollbarFadingEnabled = true
             scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-            WebView.setWebContentsDebuggingEnabled(true)
         }
         return webView
+    }
+
+    private fun injectDevToolsJs(view: WebView?, bridge: DevToolsBridge?) {
+        if (bridge != null && view != null) {
+            view.evaluateJavascript(DevToolsJs.CONSOLE_INTERCEPTOR, null)
+            view.evaluateJavascript(DevToolsJs.NETWORK_INTERCEPTOR, null)
+            view.evaluateJavascript(DevToolsJs.ELEMENT_INSPECTOR, null)
+        }
     }
 }

@@ -35,8 +35,8 @@ data class NetworkEntry(
     val requestBody: String = "",
     val responseBody: String = "",
     val startTime: Long = System.currentTimeMillis(),
-    var endTime: Long = 0,
-    var duration: Long = 0,
+    val endTime: Long = 0,
+    val duration: Long = 0,
     val type: RequestType = RequestType.OTHER
 ) {
     enum class RequestType(val label: String) {

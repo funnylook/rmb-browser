@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.rmb.browser.devtools.DevToolsBridge
-import com.rmb.browser.devtools.DevToolsJs
 import com.rmb.browser.devtools.DevToolsPanel
 import com.rmb.browser.ui.theme.RmbBrowserTheme
 import com.rmb.browser.web.BrowserTab

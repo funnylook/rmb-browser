@@ -58,8 +58,7 @@ class DevToolsBridge {
             startTime = System.currentTimeMillis()
         )
         val current = _networkRequests.value.toMutableList()
-        // Store with id key
-        pendingRequests[id] = entry
+        synchronized(pendingRequests) { pendingRequests[id] = entry }
         current.add(entry)
         if (current.size > maxNetworkEntries) current.removeAt(0)
         _networkRequests.value = current
@@ -67,9 +66,9 @@ class DevToolsBridge {
 
     @JavascriptInterface
     fun onNetworkEnd(id: String, status: Int, statusText: String, headers: String, body: String) {
-        val entry = pendingRequests.remove(id) ?: return
-        entry.endTime = System.currentTimeMillis()
-        entry.duration = entry.endTime - entry.startTime
+        val entry = synchronized(pendingRequests) { pendingRequests.remove(id) } ?: return
+        val endTime = System.currentTimeMillis()
+        val duration = endTime - entry.startTime
 
         val responseHeaders = try {
             val obj = JSONObject(headers)
@@ -82,7 +81,9 @@ class DevToolsBridge {
             status = status,
             statusText = statusText,
             responseHeaders = responseHeaders,
-            responseBody = body
+            responseBody = body,
+            endTime = endTime,
+            duration = duration
         )
 
         val current = _networkRequests.value.toMutableList()
@@ -130,7 +131,7 @@ class DevToolsBridge {
 
     fun clearNetwork() {
         _networkRequests.value = emptyList()
-        pendingRequests.clear()
+        synchronized(pendingRequests) { pendingRequests.clear() }
     }
 
     fun clearElement() {
