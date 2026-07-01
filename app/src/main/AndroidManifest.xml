@@ -10,7 +10,6 @@
     <application
         android:name=".BrowserApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="RMB浏览器"
         android:supportsRtl="true"
         android:theme="@style/Theme.RmbBrowser"

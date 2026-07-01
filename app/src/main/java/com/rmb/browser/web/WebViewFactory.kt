@@ -3,6 +3,7 @@ package com.rmb.browser.web
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.net.http.SslError
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,6 @@ object WebViewFactory {
                 loadWithOverviewMode = true
                 builtInZoomControls = true
                 displayZoomControls = false
-                setSupportZoom(true)
 
                 // Media
                 mediaPlaybackRequiresUserGesture = false
