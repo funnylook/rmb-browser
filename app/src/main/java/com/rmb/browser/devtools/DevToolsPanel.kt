@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,7 +86,7 @@ fun DevToolsPanel(
         }
 
         // Divider
-        HorizontalDivider(color = Color(0xFF424242), thickness = 1.dp)
+        Divider(color = Color(0xFF424242), thickness = 1.dp)
 
         // Content
         when (selectedTab) {
@@ -136,7 +135,7 @@ private fun ConsoleTab(bridge: DevToolsBridge, onExecuteJs: (String) -> Unit) {
         }
 
         // JS input
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -283,7 +282,7 @@ private fun NetworkTab(bridge: DevToolsBridge) {
             }
         }
 
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
 
         if (filtered.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -403,7 +402,7 @@ private fun NetworkDetailScreen(entry: NetworkEntry, onBack: () -> Unit) {
                 }
             }
         }
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -484,7 +483,7 @@ private fun ElementsTab(bridge: DevToolsBridge, onStartInspect: () -> Unit) {
             }
         }
 
-        HorizontalDivider(color = Color(0xFF424242))
+        Divider(color = Color(0xFF424242))
 
         val info = elementInfo
         if (info == null) {
