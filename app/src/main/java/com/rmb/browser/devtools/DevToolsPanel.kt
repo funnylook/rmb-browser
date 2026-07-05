@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,7 +87,7 @@ fun DevToolsPanel(
         }
 
         // Divider
-        Divider(color = Color(0xFF424242), thickness = 1.dp)
+        HorizontalDivider(color = Color(0xFF424242), thickness = 1.dp)
 
         // Content
         when (selectedTab) {
@@ -135,7 +136,7 @@ private fun ConsoleTab(bridge: DevToolsBridge, onExecuteJs: (String) -> Unit) {
         }
 
         // JS input
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -232,23 +233,88 @@ private fun ConsoleEntryRow(entry: ConsoleEntry) {
 private fun NetworkTab(bridge: DevToolsBridge) {
     val requests by bridge.networkRequests.collectAsState()
     var selectedRequest by remember { mutableStateOf<NetworkEntry?>(null) }
+    var searchQuery by remember { mutableStateOf("") }
 
     if (selectedRequest != null) {
         NetworkDetailScreen(selectedRequest!!) { selectedRequest = null }
         return
     }
 
-    if (requests.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No network requests yet", color = Color(0xFF616161), fontSize = 13.sp)
+    val filtered = if (searchQuery.isBlank()) requests
+        else requests.filter {
+            it.url.contains(searchQuery, ignoreCase = true) ||
+            it.method.contains(searchQuery, ignoreCase = true) ||
+            it.status.toString().contains(searchQuery)
         }
-        return
-    }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(requests.size) { index ->
-            val entry = requests[requests.size - 1 - index]
-            NetworkEntryRow(entry) { selectedRequest = entry }
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Search bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF252526))
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Default.Search, "搜索", tint = Color(0xFF9E9E9E), modifier = Modifier.size(16.dp))
+            Spacer(Modifier.width(6.dp))
+            BasicTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier.weight(1f),
+                textStyle = TextStyle(
+                    color = Color(0xFFD4D4D4),
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace
+                ),
+                cursorBrush = SolidColor(Color(0xFF4FC3F7)),
+                singleLine = true,
+                decorationBox = { innerTextField ->
+                    if (searchQuery.isEmpty()) {
+                        Text("Filter by URL, method, or status...", color = Color(0xFF616161), fontSize = 12.sp)
+                    }
+                    innerTextField()
+                }
+            )
+            if (searchQuery.isNotEmpty()) {
+                IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(20.dp)) {
+                    Icon(Icons.Default.Clear, "清除", tint = Color(0xFF9E9E9E), modifier = Modifier.size(14.dp))
+                }
+            }
+        }
+
+        HorizontalDivider(color = Color(0xFF424242))
+
+        if (filtered.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    if (searchQuery.isNotEmpty()) "No matching requests" else "No network requests yet",
+                    color = Color(0xFF616161),
+                    fontSize = 13.sp
+                )
+            }
+            return
+        }
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF2D2D2D))
+                        .padding(horizontal = 8.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Method", color = Color(0xFF9E9E9E), fontSize = 9.sp, modifier = Modifier.width(40.dp))
+                    Text("Status", color = Color(0xFF9E9E9E), fontSize = 9.sp, modifier = Modifier.width(32.dp))
+                    Text("URL", color = Color(0xFF9E9E9E), fontSize = 9.sp, modifier = Modifier.weight(1f))
+                    Text("Time", color = Color(0xFF9E9E9E), fontSize = 9.sp)
+                }
+            }
+            items(filtered.size) { index ->
+                val entry = filtered[filtered.size - 1 - index]
+                NetworkEntryRow(entry) { selectedRequest = entry }
+            }
         }
     }
 }
@@ -337,7 +403,7 @@ private fun NetworkDetailScreen(entry: NetworkEntry, onBack: () -> Unit) {
                 }
             }
         }
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -418,7 +484,7 @@ private fun ElementsTab(bridge: DevToolsBridge, onStartInspect: () -> Unit) {
             }
         }
 
-        Divider(color = Color(0xFF424242))
+        HorizontalDivider(color = Color(0xFF424242))
 
         val info = elementInfo
         if (info == null) {
